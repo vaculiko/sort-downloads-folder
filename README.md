@@ -113,8 +113,9 @@ You can configure Windows Task Scheduler to run this script automatically every 
 6. Select **Start a program** and click **Next**.
 7. In **Program/script**, enter the path to your Python executable, for example:
    ```
-   C:\Users\YourUser\AppData\Local\Programs\Python\Python312\python.exe
+   C:\Users\YourUser\AppData\Local\Programs\Python\PythonXXX\python.exe
    ```
+   To find your Python path, run `where python` in a terminal.
 8. In **Add arguments**, enter the script path and any desired flags, for example:
    ```
    C:\path\to\sort_downloads.py --remove-empty-folders
@@ -126,7 +127,7 @@ You can configure Windows Task Scheduler to run this script automatically every 
 Open **Command Prompt** or **PowerShell** as Administrator and run:
 
 ```cmd
-schtasks /create /tn "Sort Downloads Folder" /tr "C:\Users\YourUser\AppData\Local\Programs\Python\Python312\python.exe C:\path\to\sort_downloads.py --remove-empty-folders" /sc weekly /d MON,TUE,WED,THU,FRI /st 08:00
+schtasks /create /tn "Sort Downloads Folder" /tr "C:\path\to\python.exe C:\path\to\sort_downloads.py --remove-empty-folders" /sc weekly /d MON,TUE,WED,THU,FRI /st 08:00
 ```
 
 Replace the Python and script paths with your actual paths. To find your Python path, run `where python` in a terminal.

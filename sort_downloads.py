@@ -128,9 +128,11 @@ def move_file_safely(src_path, dest_dir, filename, dry_run=False):
 
 
 def clean_empty_folders(path, folders, dry_run=False):
-    """Remove folders that do not contain any files (recursively checked).
+    """Remove top-level folders that do not contain any files.
     
-    Skips folders that are part of the category folder structure.
+    Checks each non-category folder in path. A folder is considered empty
+    if neither it nor any of its subfolders contain files. The entire
+    folder tree is removed using shutil.rmtree.
     
     Args:
         path: The base directory path

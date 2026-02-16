@@ -167,7 +167,11 @@ class TestSortDownloads(unittest.TestCase):
         self.assertTrue(os.path.exists(empty_dir))
 
     def test_clean_empty_folders_nested_empty(self):
-        """Test that folders with only empty subfolders are removed."""
+        """Test that folders with only empty subfolders are removed.
+        
+        shutil.rmtree removes the entire tree; the counter increments once
+        for the top-level folder.
+        """
         folders = {"Category": {".txt"}}
         parent = os.path.join(self.test_dir, "Parent")
         os.makedirs(os.path.join(parent, "child"))
