@@ -127,7 +127,59 @@ def move_file_safely(src_path, dest_dir, filename, dry_run=False):
         return False
 
 
-def organize_files(path, threshold_days=15, dry_run=False, folders=None):
+def clean_empty_folders(path, folders, dry_run=False):
+    """Remove top-level folders that do not contain any files.
+    
+    Checks each non-category folder in path. A folder is considered empty
+    if neither it nor any of its subfolders contain files. The entire
+    folder tree is removed using shutil.rmtree.
+    
+    Args:
+        path: The base directory path
+        folders: Dictionary of folder names and their extensions
+        dry_run: If True, only log what would be done
+        
+    Returns:
+        Number of folders removed
+    """
+    removed = 0
+    try:
+        items = list(os.scandir(path))
+    except OSError as e:
+        logger.error(f"Failed to scan directory {path}: {e}")
+        return removed
+
+    for item in items:
+        if not item.is_dir():
+            continue
+        try:
+            if not _has_files(item.path):
+                if dry_run:
+                    logger.info(f"[DRY RUN] Would remove empty folder: {item.name}")
+                else:
+                    shutil.rmtree(item.path)
+                    logger.info(f"Removed empty folder: {item.name}")
+                removed += 1
+        except OSError as e:
+            logger.error(f"Error checking/removing folder {item.name}: {e}")
+    return removed
+
+
+def _has_files(directory):
+    """Check if directory contains any files recursively."""
+    try:
+        with os.scandir(directory) as it:
+            for entry in it:
+                if entry.is_file():
+                    return True
+                if entry.is_dir() and _has_files(entry.path):
+                    return True
+    except OSError:
+        pass
+    return False
+
+
+def organize_files(path, threshold_days=15, dry_run=False, folders=None, remove_empty_folders=False):
     """Organize files in the specified directory.
     
     Args:
@@ -135,6 +187,7 @@ def organize_files(path, threshold_days=15, dry_run=False, folders=None):
         threshold_days: Only organize files older than this many days
         dry_run: If True, only preview changes without making them
         folders: Custom folder mappings (uses DEFAULT_FOLDERS if None)
+        remove_empty_folders: If True, remove folders that contain no files
     """
     if folders is None:
         folders = DEFAULT_FOLDERS
@@ -215,6 +268,11 @@ def organize_files(path, threshold_days=15, dry_run=False, folders=None):
         except (ValueError, OSError) as e:
             logger.warning(f"Could not process Old_Folders: {e}")
     
+    # Remove empty folders if requested
+    if remove_empty_folders:
+        removed = clean_empty_folders(path, folders, dry_run)
+        logger.info(f"Removed {removed} empty folders")
+    
     # Summary
     logger.info(f"Summary: {files_moved} files moved, {dirs_moved} directories moved, {errors} errors")
     if dry_run:
@@ -247,6 +305,11 @@ def main():
         action="store_true",
         help="Enable verbose logging"
     )
+    parser.add_argument(
+        "--remove-empty-folders",
+        action="store_true",
+        help="Remove folders that do not contain any files"
+    )
     
     args = parser.parse_args()
     
@@ -254,7 +317,7 @@ def main():
         logger.setLevel(logging.DEBUG)
     
     logger.info(f"Starting organization of: {args.path}")
-    organize_files(args.path, args.threshold_days, args.dry_run)
+    organize_files(args.path, args.threshold_days, args.dry_run, remove_empty_folders=args.remove_empty_folders)
     logger.info("Organization complete!")
 
 

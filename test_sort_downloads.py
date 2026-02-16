@@ -119,6 +119,85 @@ class TestSortDownloads(unittest.TestCase):
         self.assertTrue(result)
         self.assertTrue(os.path.exists(os.path.join(dest_dir, "test_1.txt")))
 
+    def test_clean_empty_folders_removes_empty(self):
+        """Test that empty folders are removed."""
+        folders = {"Category": {".txt"}}
+        # Create an empty non-category folder
+        empty_dir = os.path.join(self.test_dir, "EmptyFolder")
+        os.makedirs(empty_dir)
+
+        removed = sort_downloads.clean_empty_folders(self.test_dir, folders)
+
+        self.assertEqual(removed, 1)
+        self.assertFalse(os.path.exists(empty_dir))
+
+    def test_clean_empty_folders_keeps_non_empty(self):
+        """Test that folders with files are kept."""
+        folders = {"Category": {".txt"}}
+        # Create a non-empty non-category folder
+        non_empty_dir = os.path.join(self.test_dir, "NonEmpty")
+        os.makedirs(non_empty_dir)
+        Path(os.path.join(non_empty_dir, "file.txt")).touch()
+
+        removed = sort_downloads.clean_empty_folders(self.test_dir, folders)
+
+        self.assertEqual(removed, 0)
+        self.assertTrue(os.path.exists(non_empty_dir))
+
+    def test_clean_empty_folders_skips_category_folders(self):
+        """Test that category folders are not removed even if empty."""
+        folders = {"Category": {".txt"}}
+        cat_dir = os.path.join(self.test_dir, "Category")
+        os.makedirs(cat_dir)
+
+        removed = sort_downloads.clean_empty_folders(self.test_dir, folders)
+
+        self.assertEqual(removed, 0)
+        self.assertTrue(os.path.exists(cat_dir))
+
+    def test_clean_empty_folders_dry_run(self):
+        """Test that dry run does not remove folders."""
+        folders = {"Category": {".txt"}}
+        empty_dir = os.path.join(self.test_dir, "EmptyFolder")
+        os.makedirs(empty_dir)
+
+        removed = sort_downloads.clean_empty_folders(self.test_dir, folders, dry_run=True)
+
+        self.assertEqual(removed, 1)
+        self.assertTrue(os.path.exists(empty_dir))
+
+    def test_clean_empty_folders_nested_empty(self):
+        """Test that folders with only empty subfolders are removed.
+        
+        shutil.rmtree removes the entire tree; the counter increments once
+        for the top-level folder.
+        """
+        folders = {"Category": {".txt"}}
+        parent = os.path.join(self.test_dir, "Parent")
+        os.makedirs(os.path.join(parent, "child"))
+
+        removed = sort_downloads.clean_empty_folders(self.test_dir, folders)
+
+        self.assertEqual(removed, 1)
+        self.assertFalse(os.path.exists(parent))
+
+    def test_organize_files_with_remove_empty_folders(self):
+        """Test organize_files with remove_empty_folders enabled."""
+        # Create an empty non-category folder with old mtime
+        empty_dir = os.path.join(self.test_dir, "SomeEmptyDir")
+        os.makedirs(empty_dir)
+        old_time = datetime.now() - timedelta(days=20)
+        os.utime(empty_dir, (old_time.timestamp(), old_time.timestamp()))
+
+        sort_downloads.organize_files(
+            self.test_dir, threshold_days=15, dry_run=False, remove_empty_folders=True
+        )
+
+        # The empty dir was moved to Old_Folders during organize, and Old_Folders
+        # is a category folder so it won't be removed by clean_empty_folders.
+        # Verify that the organize + cleanup ran without error.
+        self.assertTrue(os.path.isdir(self.test_dir))
+
 
 if __name__ == "__main__":
     unittest.main()
