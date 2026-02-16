@@ -1,7 +1,5 @@
-# Example Configuration File for sort_downloads.py
-# Copy this to config.json and customize as needed
-
 {
+  "_comment": "Example Configuration File for sort_downloads.py - Copy this to config.json and customize as needed",
   "path": "~/Downloads",
   "threshold_days": 15,
   "folders": {
@@ -15,9 +13,9 @@
     "Raster Graphics": [".psd", ".raw", ".cr2", ".nef", ".orf", ".sr2"],
     "Video": [".avi", ".mp4", ".mov", ".wmv", ".mkv", ".flv", ".webm", ".mpg", ".mpeg", ".3gp"],
     "Audio": [".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac", ".wma"],
-    "Code": [".py", ".ipynb", ".java", ".cpp", ".c", ".h", ".cs", ".xml", ".json", ".yaml", ".yml", ".sql", ".rb", ".pl", ".bat", ".cmd", ".ps1", ".dockerfile", ".fig"],
+    "Code": [".py", ".ipynb", ".java", ".cpp", ".c", ".h", ".cs", ".xml", ".json", ".yaml", ".yml", ".rb", ".pl", ".bat", ".cmd", ".ps1", ".dockerfile", ".fig"],
     "Web Files": [".html", ".css", ".js", ".php"],
-    "Database": [".sqlite", ".db", ".kdbx"],
+    "Database": [".sqlite", ".db", ".kdbx", ".sql"],
     "Executable Files": [".exe", ".msi", ".deb", ".dmg", ".appimage", ".sh", ".apk", ".xpi"],
     "System Files": [".ini", ".cfg", ".plist", ".log", ".env", ".desktop", ".folder", ".flatpakref", ".dll"],
     "Compressed Files": [".zip", ".tar", ".gz", ".7z", ".rar", ".rpm"],

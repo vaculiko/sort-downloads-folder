@@ -34,11 +34,11 @@ DEFAULT_FOLDERS = {
     "Audio": {".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac", ".wma"},
     "Code": {
         ".py", ".ipynb", ".java", ".cpp", ".c", ".h", ".cs", ".xml",
-        ".json", ".yaml", ".yml", ".sql", ".rb", ".pl", ".bat",
+        ".json", ".yaml", ".yml", ".rb", ".pl", ".bat",
         ".cmd", ".ps1", ".dockerfile", ".fig",
     },
     "Web Files": {".html", ".css", ".js", ".php"},
-    "Database": {".sqlite", ".db", ".kdbx"},
+    "Database": {".sqlite", ".db", ".kdbx", ".sql"},
     "Executable Files": {
         ".exe", ".msi", ".deb", ".dmg", ".appimage", ".sh", ".apk", ".xpi",
     },
