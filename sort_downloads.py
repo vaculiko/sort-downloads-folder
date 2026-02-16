@@ -152,9 +152,6 @@ def clean_empty_folders(path, folders, dry_run=False):
     for item in items:
         if not item.is_dir():
             continue
-        # Skip category folders themselves
-        if item.name in folders:
-            continue
         try:
             if not _has_files(item.path):
                 if dry_run:
