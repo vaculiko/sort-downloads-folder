@@ -1,0 +1,6 @@
+# Requirements for sort_downloads.py
+# This script uses only Python standard library modules
+# No external dependencies are required
+
+# For development and testing:
+# pip install -r requirements-dev.txt

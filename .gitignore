@@ -47,3 +47,6 @@ htmlcov/
 *.tmp
 tmp/
 temp/
+
+# User-specific configuration
+config.json

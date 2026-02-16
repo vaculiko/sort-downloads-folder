@@ -7,12 +7,34 @@ This File and Folder Sorter is a Python program that organizes files in a specif
 
 ## Requirements
 
-The Downloads Folder Organizer requires Python 3.5 or higher to be installed on your computer.
+The Downloads Folder Organizer requires Python 3.5 or higher to be installed on your computer. No external dependencies are required.
 
 ## Installation
 
-   - Download the program code from the Github repository.
-   - Extract the files to a directory of your choice.
+### Quick Start
+
+1. Download the program code from the Github repository.
+2. Extract the files to a directory of your choice.
+3. Make the script executable (optional, Unix-like systems):
+   ```bash
+   chmod +x sort_downloads.py
+   ```
+
+### Development Setup
+
+If you want to contribute or run tests:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+## Running Tests
+
+To verify the installation and functionality:
+
+```bash
+python3 test_sort_downloads.py
+```
 
 ## Usage
 
@@ -91,6 +113,40 @@ If you encounter any issues with the program, please check the following:
 **No Files Moving:** Check that files are older than the threshold (default: 15 days). Use `--threshold-days 0` to process all files.
 
 **Files Going to Wrong Folders:** The script uses the first matching category. You can customize the `DEFAULT_FOLDERS` dictionary in the script.
+
+## Features
+
+- ✅ **Safe operation:** Dry-run mode to preview changes before making them
+- ✅ **Smart organization:** Files are categorized by extension into logical folders
+- ✅ **Configurable:** Command-line arguments for path, threshold, and verbosity
+- ✅ **Age-based filtering:** Only organize files older than a specified threshold
+- ✅ **Conflict handling:** Automatically renames files to avoid overwriting
+- ✅ **Comprehensive logging:** Track all operations and errors
+- ✅ **Error resilient:** Gracefully handles permission errors and edge cases
+- ✅ **Well-tested:** Includes unit tests for core functionality
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Project Structure
+
+```
+sort-downloads-folder/
+├── sort_downloads.py          # Main script
+├── test_sort_downloads.py     # Unit tests
+├── README.md                  # This file
+├── CONTRIBUTING.md            # Contribution guidelines
+├── LICENSE                    # MIT License
+├── requirements.txt           # Python dependencies (none for main script)
+├── requirements-dev.txt       # Development dependencies
+├── config.example.json        # Example configuration file
+└── .gitignore                # Git ignore rules
+```
 
 
 
