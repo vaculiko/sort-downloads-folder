@@ -68,9 +68,14 @@ python3 sort_downloads.py --threshold-days 30
 python3 sort_downloads.py --verbose
 ```
 
+**Remove empty folders after organizing:**
+```bash
+python3 sort_downloads.py --remove-empty-folders
+```
+
 **Combine options:**
 ```bash
-python3 sort_downloads.py --path ~/Documents --threshold-days 60 --dry-run --verbose
+python3 sort_downloads.py --path ~/Documents --threshold-days 60 --remove-empty-folders --dry-run --verbose
 ```
 
 ### Important Notes
@@ -92,6 +97,52 @@ python3 sort_downloads.py --threshold-days 30
 3. **Custom Directory:** Use the `--path` argument to organize a different directory:
 ```bash
 python3 sort_downloads.py --path /path/to/your/folder
+```
+
+## Scheduling Automatic Runs (Windows Task Scheduler)
+
+You can configure Windows Task Scheduler to run this script automatically every workday at 8:00 AM.
+
+### Using the GUI
+
+1. Open **Task Scheduler** (search for "Task Scheduler" in the Start menu).
+2. Click **Create Basic Task** in the right-hand panel.
+3. Enter a name (e.g., `Sort Downloads Folder`) and click **Next**.
+4. Select **Weekly** and click **Next**.
+5. Set the start time to **8:00:00 AM**, recur every **1** week, and check **Mon, Tue, Wed, Thu, Fri**. Click **Next**.
+6. Select **Start a program** and click **Next**.
+7. In **Program/script**, enter the path to your Python executable, for example:
+   ```
+   C:\Users\YourUser\AppData\Local\Programs\Python\Python312\python.exe
+   ```
+8. In **Add arguments**, enter the script path and any desired flags, for example:
+   ```
+   C:\path\to\sort_downloads.py --remove-empty-folders
+   ```
+9. Click **Next**, review the summary, and click **Finish**.
+
+### Using the Command Line (schtasks)
+
+Open **Command Prompt** or **PowerShell** as Administrator and run:
+
+```cmd
+schtasks /create /tn "Sort Downloads Folder" /tr "C:\Users\YourUser\AppData\Local\Programs\Python\Python312\python.exe C:\path\to\sort_downloads.py --remove-empty-folders" /sc weekly /d MON,TUE,WED,THU,FRI /st 08:00
+```
+
+Replace the Python and script paths with your actual paths. To find your Python path, run `where python` in a terminal.
+
+### Verifying the Scheduled Task
+
+- Open Task Scheduler and look for your task under **Task Scheduler Library**.
+- Right-click the task and select **Run** to test it immediately.
+- Check the **Last Run Result** column to confirm it completed successfully.
+
+### Removing the Scheduled Task
+
+To delete the task via the command line:
+
+```cmd
+schtasks /delete /tn "Sort Downloads Folder" /f
 ```
 
 
@@ -121,6 +172,7 @@ If you encounter any issues with the program, please check the following:
 - ✅ **Configurable:** Command-line arguments for path, threshold, and verbosity
 - ✅ **Age-based filtering:** Only organize files older than a specified threshold
 - ✅ **Conflict handling:** Automatically renames files to avoid overwriting
+- ✅ **Empty folder cleanup:** Optionally remove folders that contain no files
 - ✅ **Comprehensive logging:** Track all operations and errors
 - ✅ **Error resilient:** Gracefully handles permission errors and edge cases
 - ✅ **Well-tested:** Includes unit tests for core functionality
